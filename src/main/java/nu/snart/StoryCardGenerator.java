@@ -23,7 +23,7 @@ import static org.apache.commons.io.IOUtils.toInputStream;
 public class StoryCardGenerator {
 
     public File generatePdf(Story story) throws TransformerException, IOException, FOPException {
-        String storyXml = generateXml(story);
+        String storyXml = generateXml(story, "UTF-8");
         String xslFo = generateFoFromXml(storyXml);
         File pdfFile = new File(story.id + ".pdf");
         generatePdfFromFo(xslFo, pdfFile);
@@ -33,8 +33,10 @@ public class StoryCardGenerator {
     /**
      * Generate xml for a story.
      */
-    String generateXml(Story story) {
-        return "<story>" +
+    String generateXml(Story story, String encoding) {
+        return "<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>" +
+                System.lineSeparator() +
+                "<story>" +
                 "<header>" + story.id + " = " + story.points + " SPs" + System.lineSeparator() + story.title + "</header>" +
                 "<body>" + story.userStory + "</body>" +
                 "</story>";

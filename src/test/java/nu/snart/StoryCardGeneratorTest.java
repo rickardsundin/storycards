@@ -15,7 +15,8 @@ import static org.junit.Assert.assertThat;
 public class StoryCardGeneratorTest {
 
     private Story story;
-    public static final String EXPECTED_XML = "<story><header>ISSUE-123 = 42 SPs\nImplement a story card generator</header>" +
+    public static final String EXPECTED_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<story><header>ISSUE-123 = 42 SPs\nImplement a story card generator</header>" +
             "<body>As a Scrum Master,\n" +
             "I would like to generate printable story cards from user stories,\n" +
             "so that I can print stories for the team whiteboard quicker</body></story>";
@@ -48,7 +49,7 @@ public class StoryCardGeneratorTest {
 
     @Test
     public void generateXmlFromStoryShouldReturnExpectedXml() {
-        String generatedXml = new StoryCardGenerator().generateXml(story);
+        String generatedXml = new StoryCardGenerator().generateXml(story, "UTF-8");
         assertThat(generatedXml, is(EXPECTED_XML));
     }
 
