@@ -37,4 +37,9 @@
             </fo:page-sequence>
         </fo:root>
     </xsl:template>
+    <xsl:template match="bold">
+        <fo:inline font-weight="bold">
+            <xsl:apply-templates select="node()"/>
+        </fo:inline>
+    </xsl:template>
 </xsl:stylesheet>
