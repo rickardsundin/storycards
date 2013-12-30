@@ -10,6 +10,8 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.apache.commons.io.IOUtils.toInputStream;
 
@@ -22,25 +24,18 @@ import static org.apache.commons.io.IOUtils.toInputStream;
  */
 public class StoryCardGenerator {
 
-    public File generatePdf(Story story) throws TransformerException, IOException, FOPException {
-        String storyXml = generateXml(story, "UTF-8");
-        String xslFo = generateFoFromXml(storyXml);
-        File pdfFile = new File(story.id + ".pdf");
-        generatePdfFromFo(xslFo, pdfFile);
-        return pdfFile;
+    public File[] generatePdf(Story... stories) throws TransformerException, IOException, FOPException {
+        List<File> files = new ArrayList<File>();
+        for (Story story : stories) {
+            String storyXml = story.asXml("ISO-8859-1");
+            String xslFo = generateFoFromXml(storyXml);
+            File pdfFile = new File(story.id + ".pdf");
+            generatePdfFromFo(xslFo, pdfFile);
+            files.add(pdfFile);
+        }
+        return files.toArray(new File[stories.length]);
     }
 
-    /**
-     * Generate xml for a story.
-     */
-    String generateXml(Story story, String encoding) {
-        return "<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>" +
-                System.lineSeparator() +
-                "<story>" +
-                "<header>" + story.id + " = " + story.points + " SPs" + System.lineSeparator() + story.title + "</header>" +
-                "<body>" + story.userStory + "</body>" +
-                "</story>";
-    }
 
     /**
      * Transform a story in xml format to xsl-fo that will display nicely.

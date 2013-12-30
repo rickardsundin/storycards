@@ -16,10 +16,10 @@ public class StoryCardGeneratorTest {
 
     private Story story;
     public static final String EXPECTED_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<story><header>ISSUE-123 = 42 SPs\nImplement a story card generator</header>" +
-            "<body>As a Scrum Master,\n" +
-            "I would like to generate printable story cards from user stories,\n" +
-            "so that I can print stories for the team whiteboard quicker</body></story>";
+            "<story><header>ISSUE-123\nImplement a story card generator</header>" +
+            "<body><bold>As a</bold> Scrum Master,\n" +
+            "<bold>I want</bold> to generate printable story cards from user stories,\n" +
+            "<bold>so that</bold> I can print stories for the team whiteboard quicker</body></story>";
 
     private static final String EXPECTED_XSL_FO = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<fo:root xmlns:fo=\"http://www.w3.org/1999/XSL/Format\">" +
@@ -31,8 +31,8 @@ public class StoryCardGeneratorTest {
             "</fo:simple-page-master>" +
             "</fo:layout-master-set><fo:page-sequence master-reference=\"first\">" +
             "<fo:flow flow-name=\"xsl-region-body\">" +
-            "<fo:block linefeed-treatment=\"preserve\" space-after=\"5mm\" space-before=\"5mm\" padding=\"5mm\" background-color=\"#4f81bd\" color=\"white\" font-family=\"sans-serif\" font-size=\"44pt\">ISSUE-123 = 42 SPs\nImplement a story card generator</fo:block>" +
-            "<fo:block linefeed-treatment=\"preserve\" font-size=\"36pt\" font-family=\"verdana\">As a Scrum Master,\nI would like to generate printable story cards from user stories,\nso that I can print stories for the team whiteboard quicker</fo:block></fo:flow></fo:page-sequence></fo:root>";
+            "<fo:block linefeed-treatment=\"preserve\" space-after=\"5mm\" space-before=\"5mm\" padding=\"5mm\" background-color=\"#4f81bd\" color=\"white\" font-family=\"sans-serif\" font-size=\"44pt\">ISSUE-123\nImplement a story card generator</fo:block>" +
+            "<fo:block linefeed-treatment=\"preserve\" font-size=\"36pt\" font-family=\"verdana\"><fo:inline font-weight=\"bold\">As a</fo:inline> Scrum Master,\n<fo:inline font-weight=\"bold\">I want</fo:inline> to generate printable story cards from user stories,\n<fo:inline font-weight=\"bold\">so that</fo:inline> I can print stories for the team whiteboard quicker</fo:block></fo:flow></fo:page-sequence></fo:root>";
 
 
     @Before
@@ -40,17 +40,10 @@ public class StoryCardGeneratorTest {
         // Setup data for a user story
         String storyId = "ISSUE-123";
         String storyTitle = "Implement a story card generator";
-        String userStory = "As a Scrum Master,\n" +
-                "I would like to generate printable story cards from user stories,\n" +
-                "so that I can print stories for the team whiteboard quicker";
-        int storyPoints = 42;
-        story = create(storyId, storyTitle, userStory, storyPoints);
-    }
-
-    @Test
-    public void generateXmlFromStoryShouldReturnExpectedXml() {
-        String generatedXml = new StoryCardGenerator().generateXml(story, "UTF-8");
-        assertThat(generatedXml, is(EXPECTED_XML));
+        String userStory = "*As a* Scrum Master,\n" +
+                "*I want* to generate printable story cards from user stories,\n" +
+                "*so that* I can print stories for the team whiteboard quicker";
+        story = create(storyId, storyId + "\n" + storyTitle, JiraMarkup.toHtml(userStory));
     }
 
     @Test
@@ -61,8 +54,9 @@ public class StoryCardGeneratorTest {
 
     @Test
     public void generatePdfShouldGenerateFileOfExpectedSize() throws TransformerException, IOException, FOPException {
-        File file = new StoryCardGenerator().generatePdf(story);
+        File file = new StoryCardGenerator().generatePdf(story)[0];
         assertThat(file.exists(), is(true));
-        assertThat("Size of generated PDF", file.length(), is(5586L));
+        // Asserting file size instead of content, since an embedded timestamp makes content different for each run
+        assertThat("Size of generated PDF", file.length(), is(5754L));
     }
 }
