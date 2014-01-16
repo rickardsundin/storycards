@@ -10,6 +10,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,7 @@ import java.util.List;
 public class JiraStoryRepository {
     private final String jiraUri;
     private final String username;
-    private final String password;
+    private final char[] password;
     private final StoryFactory storyFactory;
 
     /**
@@ -29,7 +31,7 @@ public class JiraStoryRepository {
      * @param password Your Jira password
      * @param storyFactory Your story factory implementation
      */
-    public JiraStoryRepository(String jiraUri, String username, String password, StoryFactory storyFactory) {
+    public JiraStoryRepository(String jiraUri, String username, char[] password, StoryFactory storyFactory) {
         ensureHttps(jiraUri);
         this.jiraUri = jiraUri;
         this.username = username;
@@ -41,7 +43,7 @@ public class JiraStoryRepository {
      * Get stories for issue ids.
      */
     public Story[] findByIds(String... issues) {
-        List<Story> stories = new ArrayList<Story>();
+        List<Story> stories = new ArrayList<>();
         for (String issue : issues) {
             stories.add(findById(issue));
         }
@@ -84,7 +86,7 @@ public class JiraStoryRepository {
      */
     private JSONObject getJsonFrom(URI issueUri, String... fields) {
         Client client = ClientBuilder.newClient();
-        client.register(new HttpBasicAuthFilter(username, password));
+        client.register(new HttpBasicAuthFilter(username, asBytes(password, "ISO-8859-1")));
         WebTarget target = client.target(issueUri);
         if (fields != null && fields.length > 0) {
             target.queryParam("fields", StringUtils.join(fields, ","));
@@ -92,5 +94,10 @@ public class JiraStoryRepository {
         Response response = target.request().get();
         String responseBody = response.readEntity(String.class);
         return new JSONObject(responseBody);
+    }
+
+    private byte[] asBytes(char[] chars, String charsetName) {
+        Charset charset = Charset.forName(charsetName);
+        return charset.encode(CharBuffer.wrap(chars)).array();
     }
 }
