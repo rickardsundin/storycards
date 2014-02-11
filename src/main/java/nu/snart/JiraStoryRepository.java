@@ -43,7 +43,7 @@ public class JiraStoryRepository {
      * Get stories for issue ids.
      */
     public Story[] findByIds(String... issues) {
-        List<Story> stories = new ArrayList<>();
+        List<Story> stories = new ArrayList<Story>();
         for (String issue : issues) {
             stories.add(findById(issue));
         }
@@ -86,7 +86,7 @@ public class JiraStoryRepository {
      */
     private JSONObject getJsonFrom(URI issueUri, String... fields) {
         Client client = ClientBuilder.newClient();
-        client.register(new HttpBasicAuthFilter(username, asBytes(password, "ISO-8859-1")));
+        client.register(new HttpBasicAuthFilter(username, asBytes(password, Charset.defaultCharset().name())));
         WebTarget target = client.target(issueUri);
         if (fields != null && fields.length > 0) {
             target.queryParam("fields", StringUtils.join(fields, ","));

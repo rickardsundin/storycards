@@ -34,7 +34,7 @@ public class Story {
 
     private String xmlWrapper(String encoding, String header, String body) {
         return "<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>" +
-                System.lineSeparator() +
+                System.getProperty("line.separator") +
                 "<story>" +
                 "<header>" + header + "</header>" +
                 "<body>" + body + "</body>" +

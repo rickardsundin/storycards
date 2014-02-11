@@ -20,7 +20,7 @@ public class ExampleJiraStoryFactory implements StoryFactory {
         String id = issue.getString("key");
         String summary = fields.getString("summary");
         String userStory = fields.getString("description");
-        String header = id + System.lineSeparator() + summary;
+        String header = id + System.getProperty("line.separator") + summary;
         return Story.create(id, header, JiraMarkup.toHtml(userStory));
     }
 }
