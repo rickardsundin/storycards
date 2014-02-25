@@ -18,7 +18,7 @@ public class CommandLine {
         String username = requestWithDefaultValue(console, "Username", defaultUserName);
         char[] password = console.readPassword("Password: ");
 
-        JiraStoryRepository storyRepository = new JiraStoryRepository(jiraUri, username, password, new SplJiraStoryFactory());
+        JiraStoryRepository storyRepository = new JiraStoryRepository(jiraUri, username, password, new ExampleJiraStoryFactory());
         StoryCardGenerator cardGenerator = new StoryCardGenerator();
         while (true) {
             String issueKey = console.readLine("Issue: ");
