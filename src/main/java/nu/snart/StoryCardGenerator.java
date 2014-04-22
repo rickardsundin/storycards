@@ -5,20 +5,11 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +28,17 @@ public class StoryCardGenerator {
     public File[] generatePdf(Story... stories) throws TransformerException, IOException, FOPException {
         List<File> files = new ArrayList<File>();
         for (Story story : stories) {
-            String storyXml = story.asXml(Charset.defaultCharset().name());
-            String xslFo = generateFoFromXml(storyXml);
-            File pdfFile = new File(story.id + ".pdf");
-            generatePdfFromFo(xslFo, pdfFile);
-            files.add(pdfFile);
+            files.add(generatePdfFromStory(story));
         }
         return files.toArray(new File[stories.length]);
+    }
+
+    private File generatePdfFromStory(Story story) throws TransformerException, IOException, FOPException {
+        String storyXml = story.asXml(Charset.defaultCharset().name());
+        String xslFo = generateFoFromXml(storyXml);
+        File pdfFile = new File(story.id + ".pdf");
+        generatePdfFromFo(xslFo, pdfFile);
+        return pdfFile;
     }
 
 
