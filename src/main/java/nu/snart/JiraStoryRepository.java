@@ -1,5 +1,6 @@
 package nu.snart;
 
+import com.google.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.filter.HttpBasicAuthFilter;
 import org.json.JSONObject;
@@ -22,21 +23,18 @@ public class JiraStoryRepository {
     private final String jiraUri;
     private final String username;
     private final char[] password;
-    private final StoryFactory storyFactory;
+    @Inject private StoryFactory storyFactory;
 
     /**
-     *
-     * @param jiraUri Uri to your Jira installation, make sure to use https. (E.g. "https://jira.mycompany.com/")
-     * @param username Your Jira username
-     * @param password Your Jira password
-     * @param storyFactory Your story factory implementation
+     * @param jiraUri      Uri to your Jira installation, make sure to use https. (E.g. "https://jira.mycompany.com/")
+     * @param username     Your Jira username
+     * @param password     Your Jira password
      */
-    public JiraStoryRepository(String jiraUri, String username, char[] password, StoryFactory storyFactory) {
+    public JiraStoryRepository(String jiraUri, String username, char[] password) {
         ensureHttps(jiraUri);
         this.jiraUri = jiraUri;
         this.username = username;
         this.password = password;
-        this.storyFactory = storyFactory;
     }
 
     /**

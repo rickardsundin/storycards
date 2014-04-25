@@ -1,5 +1,7 @@
 package nu.snart;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.apache.fop.apps.FOPException;
 
 import javax.xml.transform.TransformerException;
@@ -9,16 +11,36 @@ import java.io.IOException;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class CommandLine {
+
+    private final Console console;
+
     public static void main(String[] args) throws TransformerException, IOException, FOPException {
-        Console console = System.console();
-        String jiraUri = args.length == 1 ?
-                requestWithDefaultValue(console, "Jira URI", args[0]) :
-                console.readLine("Jira URI: ");
+        Injector injector = Guice.createInjector(new AppInjector());
+        CommandLine app = injector.getInstance(CommandLine.class);
+        app.run(args);
+    }
+
+    public CommandLine() {
+        console = System.console();
+    }
+
+    private void run(String[] args) throws TransformerException, IOException, FOPException {
+        String jiraUri = getJiraUri(args);
         String defaultUserName = System.getProperty("user.name");
         String username = requestWithDefaultValue(console, "Username", defaultUserName);
         char[] password = console.readPassword("Password: ");
 
-        JiraStoryRepository storyRepository = new JiraStoryRepository(jiraUri, username, password, new ExampleJiraStoryFactory());
+        run(jiraUri, username, password);
+    }
+
+    private String getJiraUri(String[] args) {
+        return args.length == 1 ?
+                requestWithDefaultValue(console, "Jira URI", args[0]) :
+                console.readLine("Jira URI: ");
+    }
+
+    private void run(String jiraUri, String username, char[] password) throws TransformerException, IOException, FOPException {
+        JiraStoryRepository storyRepository = new JiraStoryRepository(jiraUri, username, password);
         StoryCardGenerator cardGenerator = new StoryCardGenerator();
         while (true) {
             String issueKey = console.readLine("Issue: ");
