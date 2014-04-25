@@ -10,7 +10,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import java.util.List;
  * Fetches stories from Jira.
  */
 public class JiraStoryRepository {
-    private final String jiraUri;
+    private final URI jiraUri;
     private final String username;
     private final char[] password;
     @Inject private StoryFactory storyFactory;
@@ -30,7 +29,7 @@ public class JiraStoryRepository {
      * @param username     Your Jira username
      * @param password     Your Jira password
      */
-    public JiraStoryRepository(String jiraUri, String username, char[] password) {
+    public JiraStoryRepository(URI jiraUri, String username, char[] password) {
         ensureHttps(jiraUri);
         this.jiraUri = jiraUri;
         this.username = username;
@@ -58,15 +57,11 @@ public class JiraStoryRepository {
 
     private URI uriForIssue(String issueId) {
         assertIssueId(issueId);
-        try {
-            return new URI(jiraUri).resolve("/rest/api/2/issue/").resolve(issueId);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(issueId + " does not look like a valid Jira issue id");
-        }
+        return jiraUri.resolve("/rest/api/2/issue/").resolve(issueId);
     }
 
-    static void ensureHttps(String uri) {
-        if (!uri.startsWith("https")) {
+    static void ensureHttps(URI uri) {
+        if (!uri.getScheme().equalsIgnoreCase("https")) {
             throw new IllegalArgumentException("Make sure that your Jira URI starts with 'https'. This is important since HTTP Basic authentication is used.");
         }
     }

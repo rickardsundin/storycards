@@ -2,6 +2,8 @@ package nu.snart;
 
 import org.junit.Test;
 
+import java.net.URI;
+
 public class JiraStoryRepositoryTest {
     @Test
     public void assertIssueIdShouldDoNothingOnValidId() {
@@ -27,11 +29,11 @@ public class JiraStoryRepositoryTest {
 
     @Test
     public void ensureHttpsShouldDoNothingOnHttpsUri() {
-        JiraStoryRepository.ensureHttps("https://my.jira.com");
+        JiraStoryRepository.ensureHttps(URI.create("https://my.jira.com"));
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void ensureHttpsShouldThrowExceptionOnHttpUri() {
-        JiraStoryRepository.ensureHttps("http://my.jira.com");
+        JiraStoryRepository.ensureHttps(URI.create("http://my.jira.com"));
     }
 }

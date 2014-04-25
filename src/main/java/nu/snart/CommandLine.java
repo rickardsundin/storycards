@@ -7,6 +7,7 @@ import org.apache.fop.apps.FOPException;
 import javax.xml.transform.TransformerException;
 import java.io.Console;
 import java.io.IOException;
+import java.net.URI;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -25,7 +26,7 @@ public class CommandLine {
     }
 
     private void run(String[] args) throws TransformerException, IOException, FOPException {
-        String jiraUri = getJiraUri(args);
+        URI jiraUri = getJiraUri(args);
         String defaultUserName = System.getProperty("user.name");
         String username = requestWithDefaultValue(console, "Username", defaultUserName);
         char[] password = console.readPassword("Password: ");
@@ -33,13 +34,14 @@ public class CommandLine {
         run(jiraUri, username, password);
     }
 
-    private String getJiraUri(String[] args) {
-        return args.length == 1 ?
+    private URI getJiraUri(String[] args) {
+        String uriString = args.length == 1 ?
                 requestWithDefaultValue(console, "Jira URI", args[0]) :
                 console.readLine("Jira URI: ");
+        return URI.create(uriString);
     }
 
-    private void run(String jiraUri, String username, char[] password) throws TransformerException, IOException, FOPException {
+    private void run(URI jiraUri, String username, char[] password) throws TransformerException, IOException, FOPException {
         JiraStoryRepository storyRepository = new JiraStoryRepository(jiraUri, username, password);
         StoryCardGenerator cardGenerator = new StoryCardGenerator();
         while (true) {
