@@ -1,4 +1,4 @@
-package nu.snart;
+package nu.snart.storycards;
 
 import org.json.JSONObject;
 
@@ -14,8 +14,9 @@ public interface StoryFactory {
      */
     String[] fields();
 
-    /**
-     * Provides a mapping from json to a Story object.
-     */
-    Story createStoryFromJson(JSONObject json);
+    void setJiraRepository(JiraRepository jiraRepository);
+
+    Story createStory(String issueId);
+
+    Story createStoryFromJson(JSONObject issueAsJson);
 }

@@ -1,4 +1,4 @@
-package nu.snart;
+package nu.snart.storycards;
 
 import org.junit.Test;
 

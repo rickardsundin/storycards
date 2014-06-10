@@ -17,19 +17,25 @@
             <!--  starts actual layout  -->
             <fo:page-sequence master-reference="first">
                 <fo:flow flow-name="xsl-region-body">
-                    <fo:block font-size="44pt"
+                    <fo:block font-size="36pt"
+                              font-family="sans-serif"
+                              background-color="#fdf4bb"
+                              padding="5mm"
+                              linefeed-treatment="preserve">
+                        <xsl:apply-templates select="label"/>
+                    </fo:block>
+                    <fo:block font-size="36pt"
                               font-family="sans-serif"
                               color="white"
                               background-color="#4f81bd"
                               padding="5mm"
-                              space-before="5mm"
                               space-after="5mm"
                               linefeed-treatment="preserve">
                         <xsl:apply-templates select="header"/>
                     </fo:block>
 
                     <fo:block font-family="verdana"
-                              font-size="36pt"
+                              font-size="28pt"
                               linefeed-treatment="preserve">
                         <xsl:apply-templates select="body"/>
                     </fo:block>
