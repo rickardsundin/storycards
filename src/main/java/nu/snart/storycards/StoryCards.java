@@ -22,7 +22,7 @@ public class StoryCards {
 
         while (true) {
             String issueId = commandLine.readIssueId();
-            if (issueId == null) {
+            if (issueId == null || issueId.isEmpty()) {
                 commandLine.print("Bye!");
                 return;
             }
