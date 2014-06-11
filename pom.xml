@@ -9,6 +9,11 @@
 
     <name>storycard</name>
     <url>http://maven.apache.org</url>
+    <scm>
+        <url>https://github.com/rickardsundin/storycards</url>
+        <connection>scm:git:git://github.com/rickardsundin/storycards.git</connection>
+        <developerConnection>scm:git:git@github.com:rickardsundin/storycards.git</developerConnection>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
