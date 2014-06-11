@@ -11,8 +11,8 @@
     <url>http://maven.apache.org</url>
     <scm>
         <url>https://github.com/rickardsundin/storycards</url>
-        <connection>scm:git:git://github.com/rickardsundin/storycards.git</connection>
-        <developerConnection>scm:git:git://github.com/rickardsundin/storycards.git</developerConnection>
+        <connection>scm:git:https://github.com/rickardsundin/storycards.git</connection>
+        <developerConnection>scm:git:https://github.com/rickardsundin/storycards.git</developerConnection>
     </scm>
 
     <properties>
