@@ -12,7 +12,7 @@
     <scm>
         <url>https://github.com/rickardsundin/storycards</url>
         <connection>scm:git:git://github.com/rickardsundin/storycards.git</connection>
-        <developerConnection>scm:git:git@github.com:rickardsundin/storycards.git</developerConnection>
+        <developerConnection>scm:git:git://github.com/rickardsundin/storycards.git</developerConnection>
     </scm>
 
     <properties>
