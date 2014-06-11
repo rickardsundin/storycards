@@ -2,7 +2,6 @@ package nu.snart.storycards;
 
 import org.apache.fop.apps.FOPException;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.xml.transform.TransformerException;
@@ -13,7 +12,7 @@ import static nu.snart.storycards.Story.create;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class StoryCardGeneratorTest {
+public class PdfGeneratorTest {
 
     private Story story;
     public static final String EXPECTED_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -32,9 +31,9 @@ public class StoryCardGeneratorTest {
             "</fo:simple-page-master>" +
             "</fo:layout-master-set><fo:page-sequence master-reference=\"first\">" +
             "<fo:flow flow-name=\"xsl-region-body\">" +
-            "<fo:block linefeed-treatment=\"preserve\" space-after=\"5mm\" space-before=\"5mm\" padding=\"5mm\" background-color=\"#4f81bd\" color=\"white\" font-family=\"sans-serif\" font-size=\"44pt\">ISSUE-123\nImplement a story card generator</fo:block>" +
-            "<fo:block linefeed-treatment=\"preserve\" font-size=\"36pt\" font-family=\"verdana\"><fo:inline font-weight=\"bold\">As a</fo:inline> Scrum Master,\n<fo:inline font-weight=\"bold\">I want</fo:inline> to generate printable story cards from user stories,\n<fo:inline font-weight=\"bold\">so that</fo:inline> I can print stories for the team whiteboard quicker</fo:block></fo:flow></fo:page-sequence></fo:root>";
-
+            "<fo:block linefeed-treatment=\"preserve\" padding=\"5mm\" background-color=\"#fdf4bb\" font-family=\"sans-serif\" font-size=\"36pt\"/>" +
+            "<fo:block linefeed-treatment=\"preserve\" space-after=\"5mm\" padding=\"5mm\" background-color=\"#4f81bd\" color=\"white\" font-family=\"sans-serif\" font-size=\"36pt\">ISSUE-123\nImplement a story card generator</fo:block>" +
+            "<fo:block linefeed-treatment=\"preserve\" font-size=\"28pt\" font-family=\"verdana\"><fo:inline font-weight=\"bold\">As a</fo:inline> Scrum Master,\n<fo:inline font-weight=\"bold\">I want</fo:inline> to generate printable story cards from user stories,\n<fo:inline font-weight=\"bold\">so that</fo:inline> I can print stories for the team whiteboard quicker</fo:block></fo:flow></fo:page-sequence></fo:root>";
 
     @Before
     public void setUp() {
@@ -47,7 +46,7 @@ public class StoryCardGeneratorTest {
         story = create(storyId, storyId + "\n" + storyTitle, JiraMarkup.toHtml(userStory));
     }
 
-    @Ignore
+    @Test
     public void generateFoFromXmlShouldReturnExpectedXslFo() throws IOException, TransformerException {
         String xslFo = new PdfGenerator().generateFoFromXml(EXPECTED_XML);
         assertThat(xslFo, is(EXPECTED_XSL_FO));
@@ -58,6 +57,6 @@ public class StoryCardGeneratorTest {
         File file = new PdfGenerator().generatePdf(story)[0];
         assertThat(file.exists(), is(true));
         // Asserting file size instead of content, since an embedded timestamp makes content different for each run
-//        assertThat("Size of generated PDF", file.length(), is(5754L));
+        assertThat("Size of generated PDF", file.length(), is(5749L));
     }
 }
