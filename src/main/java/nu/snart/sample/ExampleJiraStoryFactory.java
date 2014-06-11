@@ -16,11 +16,6 @@ public class ExampleJiraStoryFactory implements StoryFactory {
 
     private JiraRepository jiraRepository;
 
-    @Override
-    public String[] fields() {
-        return new String[] {"key", "summary", "description"};
-    }
-
     public Story createStoryFromJson(JSONObject issue) {
         JSONObject fields = issue.getJSONObject("fields");
         String id = issue.getString("key");

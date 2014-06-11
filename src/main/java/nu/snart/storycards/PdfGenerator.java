@@ -1,6 +1,5 @@
 package nu.snart.storycards;
 
-import nu.snart.storycards.Story;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
