@@ -3,7 +3,7 @@
 
     <groupId>nu.snart</groupId>
     <artifactId>storycards</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <name>storycards</name>
@@ -12,7 +12,7 @@
         <url>https://github.com/rickardsundin/storycards</url>
         <connection>scm:git:https://github.com/rickardsundin/storycards.git</connection>
         <developerConnection>scm:git:https://github.com/rickardsundin/storycards.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>storycards-1.1</tag>
     </scm>
 
     <distributionManagement>
