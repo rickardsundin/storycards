@@ -9,8 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static nu.snart.storycards.Story.create;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PdfGeneratorTest {
 
@@ -49,15 +48,15 @@ public class PdfGeneratorTest {
     @Test
     public void generateFoFromXmlShouldReturnExpectedXslFo() throws IOException, TransformerException {
         String xslFo = new PdfGenerator().generateFoFromXml(EXPECTED_XML);
-        assertThat(xslFo, is(EXPECTED_XSL_FO));
+        assertThat(xslFo).isEqualTo(EXPECTED_XSL_FO);
     }
 
     @Test
     public void generatePdfShouldGenerateFileOfExpectedSize() throws TransformerException, IOException, FOPException {
         File file = new PdfGenerator().generatePdf(story)[0];
-        assertThat(file.exists(), is(true));
+        assertThat(file.exists());
         // Asserting file size instead of content, since an embedded timestamp makes content different for each run
-        assertThat("Size of generated PDF", file.length(), is(5749L));
+        assertThat(file.length()).isGreaterThanOrEqualTo(5749L);
         file.deleteOnExit();
     }
 }
