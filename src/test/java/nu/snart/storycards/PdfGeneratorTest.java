@@ -57,6 +57,6 @@ public class PdfGeneratorTest {
         assertThat(file.exists());
         // Asserting file size instead of content, since an embedded timestamp makes content different for each run
         assertThat(file.length()).isGreaterThanOrEqualTo(5749L);
-        //file.deleteOnExit();
+        file.deleteOnExit();
     }
 }
