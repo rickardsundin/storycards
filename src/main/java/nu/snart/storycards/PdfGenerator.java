@@ -11,6 +11,9 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,18 +28,18 @@ import static org.apache.commons.io.IOUtils.toInputStream;
  */
 public class PdfGenerator {
 
-    public File[] generatePdf(Story... stories) throws TransformerException, IOException, FOPException {
-        List<File> files = new ArrayList<>();
+    Path[] generatePdf(Story... stories) throws TransformerException, IOException, FOPException {
+        List<Path> files = new ArrayList<>();
         for (Story story : stories) {
             files.add(generatePdfFromStory(story));
         }
-        return files.toArray(new File[stories.length]);
+        return files.toArray(new Path[stories.length]);
     }
 
-    public File generatePdfFromStory(Story story) throws TransformerException, IOException, FOPException {
+    private Path generatePdfFromStory(Story story) throws TransformerException, IOException, FOPException {
         String storyXml = story.asXml(Charset.defaultCharset().name());
         String xslFo = generateFoFromXml(storyXml);
-        File pdfFile = new File(story.id + ".pdf");
+        Path pdfFile = Paths.get(story.id + ".pdf");
         generatePdfFromFo(xslFo, pdfFile);
         return pdfFile;
     }
@@ -45,7 +48,7 @@ public class PdfGenerator {
     /**
      * Transform a story in xml format to xsl-fo that will display nicely.
      */
-    public String generateFoFromXml(String storyXml) throws TransformerException {
+    String generateFoFromXml(String storyXml) throws TransformerException {
         Source inputXml = new StreamSource(toInputStream(storyXml));
         Source xslt = new StreamSource(getClass().getResourceAsStream("/story2fo.xsl"));
         return transform(inputXml, xslt);
@@ -66,8 +69,8 @@ public class PdfGenerator {
     /**
      * Generate a PDF from XSL-FO.
      */
-    void generatePdfFromFo(String xslFo, File pdfFile) throws IOException, FOPException, TransformerException {
-        try (OutputStream out = new BufferedOutputStream(new FileOutputStream(pdfFile))) {
+    void generatePdfFromFo(String xslFo, Path pdfFile) throws IOException, FOPException, TransformerException {
+        try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(pdfFile))) {
             Fop fop = FopFactory.newInstance().newFop(MimeConstants.MIME_PDF, out);
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             Source source = new StreamSource(toInputStream(xslFo));

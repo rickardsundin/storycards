@@ -5,8 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.transform.TransformerException;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static nu.snart.storycards.Story.create;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,10 +54,10 @@ public class PdfGeneratorTest {
 
     @Test
     public void generatePdfShouldGenerateFileOfExpectedSize() throws TransformerException, IOException, FOPException {
-        File file = new PdfGenerator().generatePdf(story)[0];
-        assertThat(file.exists());
+        Path file = new PdfGenerator().generatePdf(story)[0];
+        assertThat(Files.exists(file));
         // Asserting file size instead of content, since an embedded timestamp makes content different for each run
-        assertThat(file.length()).isGreaterThanOrEqualTo(5749L);
-        file.deleteOnExit();
+        assertThat(Files.size(file)).isGreaterThanOrEqualTo(5749L);
+        Files.delete(file);
     }
 }
